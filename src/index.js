@@ -32,8 +32,8 @@ easyvk({username, password}).then(async vk => {
     count: photoCount,
   }).then(response => response.items);
 
-  groupPhotos.map(photo => (
-    groupPhotoUrls.push(`photo${ownerId}_${photo.id}`)
+  groupPhotoUrls = groupPhotos.map(photo => (
+    `photo${ownerId}_${photo.id}`
   ));
 
   setInterval(() => {
