@@ -1,0 +1,11 @@
+{
+  "name": "psu-nodejs-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/zeallot/psu-nodejs-bot.git",
+  "author": "kookladesu@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "easyvk": "^2.7.41"
+  }
+}
