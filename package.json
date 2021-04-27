@@ -6,6 +6,7 @@
   "author": "kookladesu@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "easyvk": "^2.7.41"
+    "easyvk": "^2.7.41",
+    "emojis-list": "^3.0.0"
   }
 }

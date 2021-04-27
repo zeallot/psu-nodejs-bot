@@ -1,50 +1,44 @@
 const easyvk = require('easyvk')
-const {
-  username,
-  password,
-  ownerId,
-  albumId,
-} = require('./config');
+const { getRandomItemFromArray, getTomorrow, oneDay } = require('./utils');
+const { username, password, owner_id, album_id } = require('./config');
+const emojis = require('emojis-list')
 
-let groupPhotoUrls = [];
-let oneDay = 86400;
-let dt = new Date()
-let date = dt.getDate();
-let month = dt.getMonth();
-let year = dt.getFullYear();
-let answers = ['Да 😎', 'Нет 😐']
-let tomorrow = new Date(year, month, date, 8) / 1000 + oneDay;
-let count = 0;
+const ANSWERS = ['Да', 'Нет']
 
-function getRandomItemFromArray(array) {
-  return array[Math.floor(Math.random() * array.length)]
-}
+const fetchPhotos = async vk => {
+  let photoResponse = await vk.call('photos.get', {
+    owner_id,
+    album_id,
+    count: 1000,
+  });
+  const { items } = photoResponse;
+  return items;
+};
 
-easyvk({username, password}).then(async vk => {
-  let photoCount = await vk.call('photos.get', {
-    owner_id: ownerId,
-    album_id: albumId,
-  }).then(response => response.count);
+const getRandomPhoto = async vk => {
+  let groupPhotoUrls;
+  let photos = await fetchPhotos(vk);
 
-  let groupPhotos = await vk.call('photos.get', {
-    owner_id: ownerId,
-    album_id: albumId,
-    count: photoCount,
-  }).then(response => response.items);
-
-  groupPhotoUrls = groupPhotos.map(photo => (
-    `photo${ownerId}_${photo.id}`
+  groupPhotoUrls = photos.map(photo => (
+    `photo${owner_id}_${photo.id}`
   ));
 
-  setInterval(() => {
+  return getRandomItemFromArray(groupPhotoUrls);
+};
+
+const getAnswer = () => `${getRandomItemFromArray(ANSWERS)} ${getRandomItemFromArray(emojis)}`;
+
+let publish_date = getTomorrow();
+
+easyvk({ username, password }).then(async vk => {
+
+  setInterval(async () => {
     vk.call('wall.post', {
-      owner_id: ownerId,
-      message: getRandomItemFromArray(answers),
-      attachments: getRandomItemFromArray(groupPhotoUrls),
-      publish_date: tomorrow,
+      owner_id,
+      message: getAnswer(),
+      attachments: await getRandomPhoto(vk),
+      publish_date,
     })
-    count += 1;
-    console.log('Постов отложено ' + count);
-    tomorrow += oneDay;
+    publish_date += oneDay
   }, 500)
 })

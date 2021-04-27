@@ -2,3 +2,4 @@ node_modules
 /src/.my-session
 /src/config.js
 .idea
+vksession
