@@ -12,6 +12,6 @@ module.exports = {
   oneDay,
 
   getTomorrow: () => {
-    return Date.UTC(year, month, day, 1) / 1000;
+    return Date.UTC(year, month, day + 1, 1) / 1000;
   },
 }
